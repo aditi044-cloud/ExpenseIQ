@@ -1,0 +1,94 @@
+/* Full page */
+.landing {
+  height: 100vh;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Navbar */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 40px;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* Links */
+.nav-links a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #cbd5e1;
+}
+
+.nav-links .btn {
+  background: #38bdf8;
+  padding: 8px 14px;
+  border-radius: 6px;
+  color: black;
+}
+
+/* Hero */
+.hero {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 64px;
+  font-weight: 800;
+}
+
+.hero span {
+  color: #38bdf8;
+}
+
+.hero p {
+  margin-top: 15px;
+  color: #94a3b8;
+}
+
+/* Buttons */
+.hero-buttons {
+  margin-top: 25px;
+}
+
+.btn {
+  background: #38bdf8;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-right: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+.btn.big {
+  font-size: 18px;
+}
+
+.outline {
+  border: 1px solid #38bdf8;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #38bdf8;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 40px;
+  }
+
+  .nav {
+    padding: 15px;
+  }
+}

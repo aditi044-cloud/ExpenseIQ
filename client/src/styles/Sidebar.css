@@ -1,0 +1,53 @@
+/* Sidebar container */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -260px; /* hidden by default */
+  width: 250px;
+  height: 100%;
+  background: #0f172a;
+  color: white;
+  padding: 20px;
+  transition: 0.3s ease;
+  z-index: 1000;
+}
+
+/* When open */
+.sidebar.open {
+  left: 0;
+}
+
+/* Title */
+.sidebar h2 {
+  margin-bottom: 20px;
+}
+
+/* Links */
+.sidebar a {
+  display: block;
+  color: #cbd5e1;
+  text-decoration: none;
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.sidebar a:hover {
+  color: #38bdf8;
+}
+
+/* Hamburger button */
+.menu-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  font-size: 22px;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+/* Mobile fix */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 220px;
+  }
+}
