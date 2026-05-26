@@ -1,120 +1,300 @@
-function Dashboard() {
-  return (
-    <div>
-      <h2>Dashboard</h2>
+import "../styles/Dashboard.css";
+import { useEffect, useState } from "react";
+import API from "../services/api";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";  
 
-      <div className="dashboard">
-        <div className="card">💰 Total</div>
-        <div className="card">📉 Expenses</div>
-        <div className="card">📈 Income</div>
-      </div>
+function Dashboard({ darkMode }) {
 
-      <div className="analytics">
-        <div className="insights">
-          <h3>Insights</h3>
-          <p>Top category: Food</p>
-        </div>
+  const [expenses, setExpenses] = useState([]);
 
-        <div className="charts">
-          <div className="chart">Bar Chart</div>
-          <div className="chart">Pie Chart</div>
-        </div>
-      </div>
-    </div>
+  useEffect(() => {
+
+    fetchExpenses();
+
+  }, []);
+
+  const fetchExpenses = async () => {
+
+    try {
+
+      const response = await API.get("/expenses");
+
+      setExpenses(response.data);
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
+
+  // TOTAL
+
+  const totalExpense = expenses.reduce(
+    (sum, expense) =>
+      sum + Number(expense.amount),
+    0
   );
+
+  // HIGHEST EXPENSE
+
+  const highestExpense =
+    expenses.length > 0
+      ? Math.max(
+          ...expenses.map((e) =>
+            Number(e.amount)
+          )
+        )
+      : 0;
+      // PIE CHART DATA
+
+const pieData = expenses.map((expense) => ({
+  name: expense.title,
+  value: Number(expense.amount),
+}));
+
+// BAR CHART DATA
+
+const barData = expenses.map((expense) => ({
+  title: expense.title,
+  amount: Number(expense.amount),
+}));
+
+const COLORS = [
+  "#4f46e5",
+  "#06b6d4",
+  "#10b981",
+  "#f59e0b",
+  "#ef4444",
+];
+
+  return (
+
+<div
+  className={`app ${darkMode ? "dark" : ""}`}
+>
+
+      <h1
+        style={{
+          marginBottom: "30px",
+        }}
+      >
+        Dashboard
+      </h1>
+
+      {/* CARDS */}
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: "20px",
+          marginBottom: "40px",
+        }}
+      >
+
+        <div className={`dashboard-card ${darkMode ? "dark" : ""}`}>
+          <h3>Total Expenses</h3>
+          <h2>₹{totalExpense}</h2>
+        </div>
+
+        <div className={`dashboard-card ${darkMode ? "dark" : ""}`}>
+          <h3>Transactions</h3>
+          <h2>{expenses.length}</h2>
+        </div>
+
+        <div className={`dashboard-card ${darkMode ? "dark" : ""}`}>
+          <h3>Highest Expense</h3>
+          <h2>₹{highestExpense}</h2>
+        </div>
+
+      </div>
+
+      {/* RECENT TRANSACTIONS */}
+
+      <div
+        className={`transactions-box ${darkMode ? "dark" : ""}`}
+      >
+
+        <h2
+          style={{
+            marginBottom: "20px",
+          }}
+        >
+          Recent Transactions
+        </h2>
+
+        {expenses.slice(0, 5).map((expense) => (
+
+          <div
+            key={expense._id}
+            style={{
+              display: "flex",
+              justifyContent:
+                "space-between",
+              padding: "12px 0",
+              borderBottom:
+                "1px solid #eee",
+            }}
+          >
+
+            <span>{expense.title}</span>
+
+            <strong>
+              ₹{expense.amount}
+            </strong>
+
+          </div>
+
+        ))}
+
+      </div>
+      <div
+  style={{
+    marginTop: "40px",
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit, minmax(350px, 1fr))",
+    gap: "20px",
+  }}
+>
+
+  {/* PIE CHART */}
+
+  <div
+    className={`chart-box ${darkMode ? "dark" : ""}`}
+    style={{
+      background: "white",
+      padding: "20px",
+      borderRadius: "15px",
+      boxShadow:
+        "0 2px 10px rgba(0,0,0,0.08)",
+    }}
+  >
+
+    <h2
+      style={{
+        marginBottom: "20px",
+      }}
+    >
+      Expense Breakdown
+    </h2>
+
+    <ResponsiveContainer
+      width="100%"
+      height={300}
+    >
+
+      <PieChart>
+
+        <Pie
+          data={pieData}
+          dataKey="value"
+          nameKey="name"
+          outerRadius={100}
+          label
+        >
+
+          {pieData.map((entry, index) => (
+
+            <Cell
+              key={index}
+              fill={
+                COLORS[
+                  index % COLORS.length
+                ]
+              }
+            />
+
+          ))}
+
+        </Pie>
+
+        <Tooltip />
+
+        <Legend />
+
+      </PieChart>
+
+    </ResponsiveContainer>
+
+  </div>
+
+  {/* BAR CHART */}
+
+  <div
+    style={{
+      background: "white",
+      padding: "20px",
+      borderRadius: "15px",
+      boxShadow:
+        "0 2px 10px rgba(0,0,0,0.08)",
+    }}
+  >
+
+    <h2
+      style={{
+        marginBottom: "20px",
+      }}
+    >
+      Expense Analytics
+    </h2>
+
+    <ResponsiveContainer
+      width="100%"
+      height={300}
+    >
+
+      <BarChart data={barData}>
+
+        <CartesianGrid strokeDasharray="3 3" />
+
+        <XAxis
+  dataKey="title"
+  stroke={darkMode ? "#fff" : "#000"}
+/>
+
+        <YAxis stroke={darkMode ? "#fff" : "#000"} />
+
+        <Tooltip />
+
+        <Bar dataKey="amount" fill="#4f46e5" />
+
+      </BarChart>
+
+    </ResponsiveContainer>
+
+  </div>
+
+</div>
+
+    </div>
+    
+
+  );
+
 }
 
+const cardStyle = {
+  background: "white",
+  padding: "25px",
+  borderRadius: "15px",
+  boxShadow:
+    "0 2px 10px rgba(0,0,0,0.08)",
+};
+
 export default Dashboard;
-
-// import {
-//   PieChart,
-//   Pie,
-//   Cell,
-//   Tooltip,
-//   Legend,
-//   BarChart,
-//   Bar,
-//   XAxis,
-//   YAxis,
-//   CartesianGrid,
-// } from "recharts";
-// export default function Dashboard({ filteredExpenses }) {
-//   // 🔹 CATEGORY DATA (Pie)
-// const categoryData = {};
-//   filteredExpenses.forEach((e) => {
-//     categoryData[e.category] = (categoryData[e.category] || 0) + e.amount;
-//   });
-//   if (!filteredExpenses.length) {
-//   return <h2>No data yet. Add expenses first.</h2>;
-// }
-//   const pieData = Object.keys(categoryData).map((key) => ({
-//     name: key,
-//     value: categoryData[key],
-//   }));
-//   console.log(pieData);
-//   // 🔹 MONTHLY TREND (Bar Chart)
-//   const monthlyData = {};
-
-//   filteredExpenses.forEach((e) => {
-//     const month = new Date(e.date).toLocaleString("default", {
-//       month: "short",
-//     });
-
-//     monthlyData[month] = (monthlyData[month] || 0) + e.amount;
-//   });
-
-//   const barData = Object.keys(monthlyData).map((m) => ({
-//     month: m,
-//     amount: monthlyData[m],
-//   }));
-//   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-// const total = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
-// const categoryTotals = {};
-// filteredExpenses.forEach((e) => {
-//   const category = e.category.trim().toLowerCase();
-//   categoryTotals[category] = (categoryTotals[category] || 0) + e.amount;
-// });
-
-// let maxCategory = "";
-// let maxAmount = 0; 
-// Object.keys(categoryTotals).forEach((cat) => {
-//   if (categoryTotals[cat] > maxAmount) {
-//     maxAmount = categoryTotals[cat];
-//     maxCategory = cat;
-//   }
-// });   
-//   return ( <div>
-//   <h1>Dashboard </h1>
-//    <h2>Total Spending: ₹{total}</h2>
-//       <h3>Top Category: {maxCategory}</h3>
-//    {/* 🔥 PIE CHART */}
-//      <PieChart width={400} height={300}>
-//   <Pie
-//     data={pieData}
-//     dataKey="value"
-//     nameKey="name"
-//     cx="50%"
-//     cy="50%"
-//     outerRadius={100}
-//     label
-//   >
-//     {pieData.map((entry, index) => (
-//       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-//     ))}
-//   </Pie>
-//   <Tooltip />
-//   <Legend />
-// </PieChart>
-
-//       {/* 🔥 BAR CHART */}
-//       <BarChart width={400} height={300} data={barData}>
-//         <XAxis dataKey="month" />
-//         <YAxis />
-//         <Tooltip />
-//         <Bar dataKey="amount" />
-//       </BarChart>
-
-//     </div>
-//   );
-
-// }

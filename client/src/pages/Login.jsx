@@ -34,7 +34,7 @@ export default function Login() {
 
       alert("Login Successful!");
 
-      navigate("/dashboard");
+      navigate("/expenses");
 
     } else {
       // ❌ WRONG CREDENTIALS

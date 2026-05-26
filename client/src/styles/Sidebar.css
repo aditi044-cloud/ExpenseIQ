@@ -1,53 +1,102 @@
-/* Sidebar container */
+
+/* =========================
+   APP WRAPPER
+========================= */
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(to bottom right, #f3f4f6, #e0e7ff);
+}
+
+/* =========================
+   SIDEBAR (NO FIXED POSITION)
+========================= */
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: -260px; /* hidden by default */
-  width: 250px;
-  height: 100%;
-  background: #0f172a;
-  color: white;
-  padding: 20px;
-  transition: 0.3s ease;
-  z-index: 1000;
+  flex: 0 0 220px;   /* fixed sidebar width in flex system */
+  background-color: #111827;
+
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+
+  transition: flex-basis 0.3s ease;
+  overflow-y: auto;
 }
 
-/* When open */
-.sidebar.open {
-  left: 0;
-}
-
-/* Title */
-.sidebar h2 {
-  margin-bottom: 20px;
-}
-
-/* Links */
+/* links */
 .sidebar a {
-  display: block;
-  color: #cbd5e1;
+  color: white;
   text-decoration: none;
-  margin: 10px 0;
-  font-size: 16px;
+  padding: 15px 25px;
+  font-size: 18px;
+  font-weight: 500;
+
+  transition: background 0.2s ease;
 }
 
 .sidebar a:hover {
-  color: #38bdf8;
+  background-color: #374151;
 }
 
-/* Hamburger button */
-.menu-btn {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  font-size: 22px;
-  cursor: pointer;
-  z-index: 1100;
+/* =========================
+   MAIN CONTENT
+========================= */
+.main-content {
+  flex: 1;              /* takes remaining space */
+  padding: 35px;
+  overflow-y: auto;
+  color: #101723;
 }
 
-/* Mobile fix */
-@media (max-width: 768px) {
+/* =========================
+   TABLET RESPONSIVE
+========================= */
+@media (max-width: 1024px) {
   .sidebar {
-    width: 220px;
+    flex: 0 0 160px;
+  }
+
+  .sidebar a {
+    font-size: 16px;
+    padding: 12px 18px;
+  }
+}
+
+/* =========================
+   MOBILE → SIDEBAR TURNS INTO TOP DRAWER
+========================= */
+@media (max-width: 768px) {
+
+  .app {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    flex: 0 0 auto;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px 0;
+  }
+
+  .sidebar a {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .main-content {
+    flex: 1;
+    padding: 20px;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+@media (max-width: 480px) {
+  .sidebar a {
+    font-size: 12px;
   }
 }

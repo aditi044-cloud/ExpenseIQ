@@ -36,7 +36,7 @@ export default function Register() {
     alert("Registered Successfully!");
 
     // 🔁 REDIRECT TO LOGIN
-    navigate("/login");
+    navigate("/expenses");
   };
 
   // 🟢 UI
