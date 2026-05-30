@@ -89,7 +89,7 @@ const COLORS = [
 
       <h1
         style={{
-          marginBottom: "30px",
+          marginBottom: "34px",
         }}
       >
         Dashboard
@@ -133,6 +133,7 @@ const COLORS = [
         <h2
           style={{
             marginBottom: "20px",
+            fontSize: "20px",
           }}
         >
           Recent Transactions
@@ -189,6 +190,7 @@ const COLORS = [
     <h2
       style={{
         marginBottom: "20px",
+        fontSize: "20px",
       }}
     >
       Expense Breakdown
@@ -249,6 +251,8 @@ const COLORS = [
     <h2
       style={{
         marginBottom: "20px",
+        fontSize: "20px",
+        color: darkMode ? "#9ca3af" : "#000",
       }}
     >
       Expense Analytics

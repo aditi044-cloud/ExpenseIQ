@@ -6,17 +6,42 @@
   --muted-dark: #cbd5e1;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
 /* ================= APP LAYOUT ================= */
 * {
   transition: background 0.3s ease, color 0.3s ease;
 }
 .app {
+
   min-height: 100vh;
-  margin-left: 220px;
+
+  width: 100%;
+
   padding: 35px;
-  background: linear-gradient(to bottom right, #f3f4f6, #e0e7ff);
+
+  overflow-x: hidden;
+
+  background: linear-gradient(
+    to bottom right,
+    #f3f4f6,
+    #e0e7ff
+  );
+
   color: var(--text-light);
-   transition: background 0.3s ease, color 0.3s ease;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
 }
 
 /* DARK MODE APP */
@@ -65,64 +90,117 @@
 
 /* ================= CONTROLS (INPUTS) ================= */
 
+/* ================= CONTROLS ================= */
+
 .controls {
+
+  width: 100%;
+
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(180px, 1fr));
+
+  gap: 16px;
+
   margin-bottom: 25px;
+
+  align-items: center;
 }
+
+/* INPUTS + SELECTS + BUTTON */
+
+.controls input,
+.controls select,
+.controls button {
+
+  width: 100%;
+
+  min-height: 54px;
+
+  padding: 14px;
+
+  border-radius: 12px;
+
+  font-size: 15px;
+
+  box-sizing: border-box;
+}
+
+/* INPUT + SELECT */
 
 .controls input,
 .controls select {
-  padding: 14px;
-  border-radius: 12px;
+
   border: 1px solid #d1d5db;
+
   outline: none;
-  font-size: 15px;
+
   background: white;
+
   color: var(--text-light);
+
   transition: 0.3s;
-}
-
-/* FOCUS STATE */
-.controls input:focus,
-.controls select:focus {
-  border-color: #111827;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
-}
-
-/* DARK INPUTS */
-.dark .controls input,
-.dark .controls select {
-  background: #1f2937;
-  border: 1px solid #374151;
-  color: var(--text-dark);
 }
 
 /* PLACEHOLDER */
+
 .controls input::placeholder {
-  color: var(--muted-light);
+
+  color: #9ca3af;
 }
 
-.dark .controls input::placeholder {
-  color: var(--muted-dark);
+/* FOCUS */
+
+.controls input:focus,
+.controls select:focus {
+
+  border-color: #111827;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(79, 70, 229, 0.15);
 }
 
 /* BUTTON */
+
 .controls button {
+
   border: none;
-  border-radius: 12px;
+
   background: #1e293b;
+
   color: white;
+
   font-weight: 600;
+
   cursor: pointer;
+
   transition: 0.3s;
-  padding: 14px;
 }
 
 .controls button:hover {
+
   background: #111827;
+
   transform: translateY(-1px);
+}
+
+/* DARK MODE */
+
+.dark .controls input,
+.dark .controls select {
+
+  background: #1f2937;
+
+  border: 1px solid #374151;
+
+  color: var(--text-dark);
+}
+
+.dark .controls input::placeholder {
+
+  color: #cbd5e1;
 }
 
 /* ================= SEARCH ================= */
@@ -315,4 +393,25 @@
 .controls button:active,
 .buttons button:active {
   transform: scale(0.97);
+}/* INPUT PLACEHOLDERS */
+.controls input::placeholder {
+  color: #9ca3af;
+  opacity: 1;
 }
+
+/* SELECT PLACEHOLDER STYLE */
+.controls select {
+  color: #9ca3af;
+}
+
+/* WHEN USER SELECTS AN OPTION */
+.controls select:valid {
+  color: #9ca3af;
+}.nobita{
+  color: #111827;
+  background: white;
+  border: 1px solid #d1d5db;  }
+.nobita:focus {
+  border-color: #111827;  }
+.dark .nobita {
+  color: #f1f4f7; }

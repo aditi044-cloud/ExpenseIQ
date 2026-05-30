@@ -152,6 +152,7 @@ const filteredExpenses = expenses.filter((expense) =>
         }
       />
       <select
+      className="nobita"
   value={category}
   onChange={(e) =>
     setCategory(e.target.value)
@@ -185,6 +186,7 @@ const filteredExpenses = expenses.filter((expense) =>
 </select>
 
 <select
+className="nobita"
   value={type}
   onChange={(e) =>
     setType(e.target.value)

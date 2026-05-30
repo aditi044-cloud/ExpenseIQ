@@ -3,11 +3,15 @@
    APP WRAPPER
 ========================= */
 .app {
-  display: flex;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
-  overflow: hidden;
-  background: linear-gradient(to bottom right, #f3f4f6, #e0e7ff);
+  padding: 35px;
+  overflow-x: hidden;
+  background: linear-gradient(
+    to bottom right,
+    #f3f4f6,
+    #e0e7ff
+  );
 }
 
 /* =========================
@@ -94,7 +98,187 @@
 
 /* =========================
    SMALL MOBILE
-========================= */
+=========/* ================= SIDEBAR ================= */
+
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: linear-gradient(
+    to bottom,
+    #111827,
+    #1f2937
+  );
+
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 24px 16px;
+
+  transition: 0.3s;
+  border-right: 1px solid #1f2937;
+}
+
+/* DARK MODE */
+.sidebar.dark {
+  background: linear-gradient(
+    to bottom,
+    #020617,
+    #0f172a
+  );
+}
+
+/* ================= LOGO ================= */
+
+.sidebar-logo h2 {
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 40px;
+}
+
+/* ================= LINKS ================= */
+
+.sidebar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-links a {
+  text-decoration: none;
+  color: #cbd5e1;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 14px 16px;
+
+  border-radius: 14px;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  transition: 0.3s;
+}
+
+/* ICON SIZE */
+.sidebar-links a svg {
+  font-size: 18px;
+}
+
+/* HOVER */
+.sidebar-links a:hover {
+  background: rgba(255,255,255,0.08);
+  color: white;
+  transform: translateX(4px);
+}
+
+/* ACTIVE LINK */
+.sidebar-links a.active {
+  background: #2563eb;
+  color: white;
+
+  box-shadow:
+    0 4px 14px rgba(37, 99, 235, 0.35);
+}
+
+/* ================= BOTTOM ================= */
+
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* PROFILE */
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px;
+
+  border-radius: 14px;
+
+  background: rgba(255,255,255,0.05);
+}
+
+.profile svg {
+  font-size: 38px;
+  color: #60a5fa;
+}
+
+.profile h4 {
+  color: white;
+  margin: 0;
+}
+
+.profile p {
+  color: #94a3b8;
+  font-size: 13px;
+  margin: 2px 0 0;
+}
+
+/* LOGOUT BUTTON */
+.logout-btn {
+  border: none;
+
+  background: #ef4444;
+  color: white;
+
+  padding: 14px;
+
+  border-radius: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background: #dc2626;
+  transform: scale(1.02);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+  .sidebar {
+    width: 80px;
+    padding: 20px 10px;
+  }
+
+  .sidebar-logo h2,
+  .sidebar-links a span,
+  .profile div,
+  .logout-btn {
+    display: none;
+  }
+
+  .sidebar-links a {
+    justify-content: center;
+  }
+
+  .profile {
+    justify-content: center;
+  }
+
+}================ */
 @media (max-width: 480px) {
   .sidebar a {
     font-size: 12px;
