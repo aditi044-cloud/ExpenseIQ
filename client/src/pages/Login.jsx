@@ -1,3 +1,4 @@
+import API from "../services/api";
 import { useState } from "react";
 import "../styles/Auth.css";
 import { useNavigate } from "react-router-dom";
@@ -11,36 +12,49 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   // 🟢 LOGIN FUNCTION
-  const handleLogin = (e) => {
-    e.preventDefault();
+const handleLogin = async (e) => {
 
-    // 1. Get stored user
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+  e.preventDefault();
 
-    // 2. Check if user exists
-    if (!storedUser) {
-      alert("No user found. Please register first.");
-      return;
-    }
+  try {
 
-    // 3. PASSWORD MATCHING (IMPORTANT)
-    if (
-      email === storedUser.email &&
-      password === storedUser.password
-    ) {
-      // ✅ LOGIN SUCCESS
+    const response =
+      await API.post(
+        "/auth/login",
+        {
+          email,
+          password,
+        }
+      );
 
-      localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem(
+      "token",
+      response.data.token
+    );
 
-      alert("Login Successful!");
+    localStorage.setItem(
+      "user",
+      JSON.stringify(
+        response.data.user
+      )
+    );
 
-      navigate("/expenses");
+    alert(
+      "Login Successful"
+    );
 
-    } else {
-      // ❌ WRONG CREDENTIALS
-      alert("Invalid email or password");
-    }
-  };
+    navigate("/dashboard");
+
+  } catch (error) {
+
+    alert(
+      error.response?.data?.message ||
+      "Login Failed"
+    );
+
+  }
+
+};
 
   return (
     <div className="auth-container">

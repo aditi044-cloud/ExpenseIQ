@@ -1,6 +1,7 @@
 // export default function Register() {
 //   return <h1>Register Page</h1>;
 // }
+import API from "../services/api";
 import { useState } from "react";
 import "../styles/Auth.css";
 import { useNavigate } from "react-router-dom";
@@ -15,29 +16,38 @@ export default function Register() {
   const [password, setPassword] = useState("");
 
   // 🟢 HANDLE SUBMIT
-  const handleRegister = (e) => {
-    e.preventDefault();
+ const handleRegister = async (e) => {
 
-    // 🔴 VALIDATION
-    if (!name || !email || !password) {
-      alert("All fields are required");
-      return;
-    }
+  e.preventDefault();
 
-    if (password.length < 6) {
-      alert("Password must be at least 6 characters");
-      return;
-    }
+  try {
 
-    // 🟢 STORE USER (TEMP - localStorage)
-    const user = { name, email, password };
-    localStorage.setItem("user", JSON.stringify(user));
+    const response =
+      await API.post(
+        "/auth/register",
+        {
+          name,
+          email,
+          password,
+        }
+      );
 
-    alert("Registered Successfully!");
+    alert(
+      "Registration Successful"
+    );
 
-    // 🔁 REDIRECT TO LOGIN
-    navigate("/expenses");
-  };
+    navigate("/login");
+
+  } catch (error) {
+
+    alert(
+      error.response?.data?.message ||
+      "Registration Failed"
+    );
+
+  }
+
+};
 
   // 🟢 UI
   return (

@@ -134,6 +134,7 @@ const COLORS = [
           style={{
             marginBottom: "20px",
             fontSize: "20px",
+            color: darkMode ? "#9ca3af" : "#101723",
           }}
         >
           Recent Transactions

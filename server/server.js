@@ -1,14 +1,19 @@
+const authMiddleware =
+require("./middleware/authMiddleware");
 require("dotenv").config();
 const Expense = require("./models/Expense");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const authRoutes =
+require("./routes/authRoutes");
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
-
+app.use("/auth", authRoutes);
+app.use(authMiddleware);
 // DATABASE CONNECTION
 mongoose.connect(process.env.MONGO_URI)
 .then(() => {
@@ -63,11 +68,14 @@ app.get("/", (req, res) => {
 
 
 // GET ALL EXPENSES
-app.get("/expenses", async (req, res) => {
+app.get(
+  "/expenses",
+  authMiddleware,
+  async (req, res) => {
 
   try {
 
-    const expenses = await Expense.find();
+    const expenses = await Expense.find({ userId: req.user.id });
 
     res.send(expenses);
 
@@ -85,11 +93,14 @@ app.get("/expenses", async (req, res) => {
 
 
 // ADD NEW EXPENSE
-app.post("/expenses", async (req, res) => {
+app.post("/expenses", authMiddleware, async (req, res) => {
 
   try {
 
-    const newExpense = new Expense(req.body);
+    const newExpense = new Expense({
+      ...req.body,
+      userId: req.user.id
+    });
 
     const savedExpense = await newExpense.save();
 
@@ -112,7 +123,7 @@ app.post("/expenses", async (req, res) => {
 
 
 // UPDATE EXPENSE
-app.put("/expenses/:id", async (req, res) => {
+app.put("/expenses/:id", authMiddleware, async (req, res) => {
 
   try {
 
@@ -151,13 +162,15 @@ app.put("/expenses/:id", async (req, res) => {
 
 
 // DELETE EXPENSE
-app.delete("/expenses/:id", async (req, res) => {
+app.delete("/expenses/:id", authMiddleware, async (req, res) => {
 
   try {
 
-    const deletedExpense = await Expense.findByIdAndDelete(
-      req.params.id
-    );
+    const deletedExpense =
+await Expense.findOneAndDelete({
+  _id: req.params.id,
+  userId: req.user.id,
+});
 
     if (!deletedExpense) {
 

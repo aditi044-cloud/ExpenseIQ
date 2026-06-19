@@ -6,8 +6,9 @@ import {
   FaCog,
   FaSignOutAlt,
   FaUserCircle,
+  FaMoneyBillWave,
 } from "react-icons/fa";
-
+import { FaBullseye } from "react-icons/fa";
 import "../styles/Sidebar.css";
 
 function Sidebar({ darkMode }) {
@@ -28,17 +29,8 @@ function Sidebar({ darkMode }) {
       {/* NAVIGATION */}
       <div className="sidebar-links">
 
-        <Link
-          to="/dashboard"
-          className={
-            location.pathname === "/dashboard"
-              ? "active"
-              : ""
-          }
-        >
-          <FaChartPie />
-          <span>Dashboard</span>
-        </Link>
+       
+        
 
         <Link
           to="/expenses"
@@ -51,6 +43,28 @@ function Sidebar({ darkMode }) {
           <FaWallet />
           <span>Expenses</span>
         </Link>
+        <Link
+          to="/dashboard"
+          className={
+            location.pathname === "/dashboard"
+              ? "active"
+              : ""
+          }
+        >
+          <FaChartPie />
+          <span>Dashboard</span>
+        </Link>
+        <Link
+  to="/budget"
+  className={
+    location.pathname === "/budget"
+      ? "active"
+      : ""
+  }
+>
+   <FaMoneyBillWave />
+  <span>Budget</span>
+</Link>
 
         <Link to="/settings">
 
@@ -59,30 +73,64 @@ function Sidebar({ darkMode }) {
 
         </Link>
 
+
+        {/* <Link
+  to="/profile"
+  className={
+    location.pathname === "/profile"
+      ? "active"
+      : ""
+  }
+>
+  <FaUserCircle />
+  <span>Profile</span>
+</Link> */}
+
+
       </div>
 
       {/* USER SECTION */}
       <div className="sidebar-bottom">
 
-        <div className="profile">
+  <Link to="/profile" className="profile-link">
 
-          <FaUserCircle />
+    <div className="profile">
 
-          <div>
-            <h4>User</h4>
-            <p>Free Plan</p>
-          </div>
+      <FaUserCircle />
 
-        </div>
-
-        <button className="logout-btn">
-
-          <FaSignOutAlt />
-          Logout
-
-        </button>
-
+      <div>
+        <h4>User</h4>
+        <p>Free Plan</p>
       </div>
+
+    </div>
+
+  </Link>
+
+  <button
+  className="logout-btn"
+  onClick={() => {
+
+    localStorage.removeItem(
+      "token"
+    );
+
+    localStorage.removeItem(
+      "user"
+    );
+
+    window.location.href =
+      "/login";
+
+  }}
+>
+
+    <FaSignOutAlt />
+    Logout
+
+  </button>
+
+</div>
 
     </div>
 

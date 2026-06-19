@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import AppLayout from "./layouts/AppLayout";
 import Sidebar from "./components/Sidebar";
@@ -12,25 +13,42 @@ import Expenses from "./pages/Expenses";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Landing from "./pages/Landing";
-
+import Settings from "./pages/Settings";
+import Budget from "./pages/Budget";
+import Profile from "./pages/Profils";
 import { useEffect, useState } from "react";
+function PrivateRoute({
+  children,
+}) {
 
+  const token =
+    localStorage.getItem("token");
+
+  return token
+    ? children
+    : <Navigate to="/login" />;
+}
 function AppContent() {
+const location = useLocation();
+ const [darkMode, setDarkMode] =
+  useState(
+    localStorage.getItem("darkMode") === "true"
+  );
 
-  const [darkMode, setDarkMode] =
-    useState(false);
+useEffect(() => {
 
-  const location = useLocation();
+  if (darkMode) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
 
-  useEffect(() => {
+  localStorage.setItem(
+    "darkMode",
+    darkMode
+  );
 
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-
-  }, [darkMode]);
+}, [darkMode]);
 
   /* PAGES WHERE SIDEBAR SHOULD NOT SHOW */
   const hideSidebarRoutes = [
@@ -59,63 +77,105 @@ function AppContent() {
       )}
 
       {/* ROUTES */}
-      <Routes>
-
-        <Route
-          path="/"
-          element={<Landing />}
-        />
+   <Routes>
 
   <Route
-  path="/dashboard"
-  element={
-    <AppLayout
-      darkMode={darkMode}
-      setDarkMode={setDarkMode}
-    >
+    path="/"
+    element={<Landing />}
+  />
 
-      <Dashboard
-        darkMode={darkMode}
-      />
+  <Route
+    path="/dashboard"
+    element={
+      <PrivateRoute>
+        <AppLayout
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+        >
+          <Dashboard darkMode={darkMode} />
+        </AppLayout>
+      </PrivateRoute>
+    }
+  />
+    
 
-    </AppLayout>
-  }
-/>
-
-<Route
+ <Route
   path="/expenses"
   element={
+    <PrivateRoute>
+      <AppLayout
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+      >
+        <Expenses
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+        />
+      </AppLayout>
+    </PrivateRoute>
+  }
+/>
+
+  <Route
+    path="/settings"
+    element={
+      <AppLayout
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+      >
+        <Settings
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+        />
+      </AppLayout>
+    }
+  />
+
+  <Route
+    path="/login"
+    element={<Login />}
+  />
+
+  <Route
+    path="/register"
+    element={<Register />}
+  />
+<Route
+  path="/budget"
+  element={
+    <PrivateRoute>
+      <AppLayout
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+      >
+        <Budget darkMode={darkMode} />
+      </AppLayout>
+    </PrivateRoute>
+  }
+/>
+  <Route
+  path="/profile"
+  element={
     <AppLayout
       darkMode={darkMode}
       setDarkMode={setDarkMode}
     >
-
-      <Expenses
+      <Profile
         darkMode={darkMode}
-        setDarkMode={setDarkMode}
       />
-
     </AppLayout>
   }
 />
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-
-        <Route
-          path="/register"
-          element={<Register />}
-        />
-
-      </Routes>
+</Routes>
 
     </>
-
-  );
-
+); 
+  
 }
+
+
+
 
 function App() {
 
