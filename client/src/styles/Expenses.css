@@ -138,9 +138,19 @@ body {
 
   background: white;
 
-  color: var(--text-light);
+  color: #9ca3af;
 
   transition: 0.3s;
+}
+
+
+/* typed text / selected option */
+
+.controls input:valid,
+.controls select:valid {
+
+  color:#111827;
+
 }
 
 /* PLACEHOLDER */
@@ -394,24 +404,91 @@ body {
 .buttons button:active {
   transform: scale(0.97);
 }/* INPUT PLACEHOLDERS */
+/* ================= PLACEHOLDER COLORS ================= */
+
+/* ================= FINAL INPUT COLORS ================= */
+
+
+/* empty input */
+
+/* ================= INPUT COLORS ================= */
+
+
+/* Title + Amount empty */
+
+.controls input::placeholder {
+  color:#9ca3af;
+}
+
+
+/* Title + Amount after typing */
+
+.controls input {
+  color:#9ca3af;
+}
+
+
+.controls input:focus,
+.controls input:not(:placeholder-shown){
+  color:#111827;
+}
+
+
+
+/* Select before choosing */
+
+
+.dark .controls input::placeholder {
+  color:#94a3b8;
+}
+
+
+.dark .nobita {
+  color:#f9fafb;
+}/* ================= FIX SELECT COLORS ================= */
+
+
+/* default placeholder */
+.controls select.nobita {
+  color: #9ca3af;
+}
+
+
+/* after selecting */
+.controls select.nobita.active {
+  color: #111827;
+}
+
+
+/* typed input */
+.controls input {
+  color: #111827;
+}
+
+
+/* empty input placeholder */
 .controls input::placeholder {
   color: #9ca3af;
-  opacity: 1;
 }
 
-/* SELECT PLACEHOLDER STYLE */
-.controls select {
-  color: #9ca3af;
+
+/* DARK MODE */
+
+.dark .controls select.nobita {
+  color: #cbd5e1;
 }
 
-/* WHEN USER SELECTS AN OPTION */
-.controls select:valid {
-  color: #9ca3af;
-}.nobita{
-  color: #111827;
-  background: white;
-  border: 1px solid #d1d5db;  }
-.nobita:focus {
-  border-color: #111827;  }
-.dark .nobita {
-  color: #f1f4f7; }
+
+.dark .controls select.nobita.active {
+  color: #f9fafb;
+}
+
+
+.dark .controls input {
+  color: #f9fafb;
+}
+
+
+.dark .controls input::placeholder {
+  color: #94a3b8;
+}

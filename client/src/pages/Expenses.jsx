@@ -7,7 +7,7 @@ function Expenses({ darkMode, setDarkMode }) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
-const [type, setType] = useState("Expense");
+const [type, setType] = useState("");
 
   const [expenses, setExpenses] = useState([]);
   const [search, setSearch] = useState("");
@@ -105,6 +105,7 @@ const editExpense = (expense) => {
 
   setAmount(expense.amount);
   setCategory(expense.category);
+  setType(expense.type);
   setEditingId(expense._id);
 
 };
@@ -152,57 +153,61 @@ const filteredExpenses = expenses.filter((expense) =>
         }
       />
       <select
-      className="nobita"
-  value={category}
-  onChange={(e) =>
-    setCategory(e.target.value)
-  }
+className={category ? "nobita active" : "nobita"}
+value={category}
+onChange={(e) =>
+  setCategory(e.target.value)
+}
 >
 
-  <option value="">
-    Select Category
-  </option>
+<option value="">
+  Select Category
+</option>
 
-  <option value="Food">
-    Food
-  </option>
+<option value="Food">
+  Food
+</option>
 
-  <option value="Shopping">
-    Shopping
-  </option>
+<option value="Shopping">
+  Shopping
+</option>
 
-  <option value="Travel">
-    Travel
-  </option>
+<option value="Travel">
+  Travel
+</option>
 
-  <option value="Salary">
-    Salary
-  </option>
+<option value="Salary">
+  Salary
+</option>
 
-  <option value="Bills">
-    Bills
-  </option>
+<option value="Bills">
+  Bills
+</option>
 
 </select>
+
 
 <select
-className="nobita"
-  value={type}
-  onChange={(e) =>
-    setType(e.target.value)
-  }
+className={type ? "nobita active" : "nobita"}
+value={type}
+onChange={(e)=>
+setType(e.target.value)
+}
 >
 
-  <option value="Expense">
-    Expense
-  </option>
+<option value="">
+  Select Type
+</option>
 
-  <option value="Income">
-    Income
-  </option>
+<option value="Expense">
+ Expense
+</option>
+
+<option value="Income">
+ Income
+</option>
 
 </select>
-
       <button onClick={addExpense}>
 
         {editingId ? "Update" : "Add"}

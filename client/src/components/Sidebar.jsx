@@ -28,6 +28,18 @@ function Sidebar({ darkMode }) {
       {/* NAVIGATION */}
       <div className="sidebar-links">
 
+         <Link
+          to="/expenses"
+          className={
+            location.pathname === "/expenses"
+              ? "active"
+              : ""
+          }
+        >
+          <FaWallet />
+          <span>Expenses</span>
+        </Link>
+
         <Link
           to="/dashboard"
           className={
@@ -40,17 +52,7 @@ function Sidebar({ darkMode }) {
           <span>Dashboard</span>
         </Link>
 
-        <Link
-          to="/expenses"
-          className={
-            location.pathname === "/expenses"
-              ? "active"
-              : ""
-          }
-        >
-          <FaWallet />
-          <span>Expenses</span>
-        </Link>
+       
 
         <Link to="/settings">
 
