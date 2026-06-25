@@ -1,5 +1,6 @@
 require("dotenv").config();
 const Expense = require("./models/Expense");
+const Budget = require("./models/Budget");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -183,7 +184,154 @@ app.delete("/expenses/:id", async (req, res) => {
 
 });
 
+// PROFILE DATA
+app.get("/profile", async (req, res) => {
 
+  try {
+
+
+    const income = await Expense.aggregate([
+
+      {
+        $match: {
+          type: "Income"
+        }
+      },
+
+      {
+        $group: {
+
+          _id: null,
+
+          total: {
+            $sum: "$amount"
+          }
+
+        }
+      }
+
+    ]);
+
+
+
+
+    const expense = await Expense.aggregate([
+
+      {
+        $match: {
+          type: "Expense"
+        }
+      },
+
+
+      {
+        $group: {
+
+          _id: null,
+
+          total: {
+            $sum: "$amount"
+          }
+
+        }
+      }
+
+    ]);
+
+
+
+
+    const transactions = await Expense.countDocuments();
+
+
+
+    res.send({
+
+      income: income[0]?.total || 0,
+
+      expense: expense[0]?.total || 0,
+
+
+      savings:
+        (income[0]?.total || 0)
+        -
+        (expense[0]?.total || 0),
+
+
+      transactions
+
+    });
+
+
+
+  } catch(error){
+
+
+    res.status(500).send({
+
+      message:"Error fetching profile data",
+
+      error:error.message
+
+    });
+
+
+  }
+
+
+});
+
+// GET BUDGET
+app.get("/budget", async(req,res)=>{
+
+  try{
+
+    const budget = await Budget.findOne();
+
+    res.send(budget);
+
+  }
+
+  catch(error){
+
+    res.status(500).send(error);
+
+  }
+
+});
+
+
+
+// SAVE BUDGET
+app.post("/budget", async(req,res)=>{
+
+  try{
+
+    const budget =
+    await Budget.findOneAndUpdate(
+
+      {},
+
+      req.body,
+
+      {
+        upsert:true,
+        new:true
+      }
+
+    );
+
+    res.send(budget);
+
+  }
+
+  catch(error){
+
+    res.status(500).send(error);
+
+  }
+
+});
 
 // START SERVER
 app.listen(process.env.PORT, () => {
