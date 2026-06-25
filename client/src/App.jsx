@@ -2,133 +2,74 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  useLocation,
 } from "react-router-dom";
+
+import { useEffect, useState } from "react";
+
 import AppLayout from "./layouts/AppLayout";
-import Sidebar from "./components/Sidebar";
 
 import Dashboard from "./pages/Dashboard";
 import Expenses from "./pages/Expenses";
+import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Landing from "./pages/Landing";
 
-import { useEffect, useState } from "react";
-
 function AppContent() {
-
-  const [darkMode, setDarkMode] =
-    useState(false);
-
-  const location = useLocation();
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-
+    document.documentElement.classList.toggle("dark", darkMode);
   }, [darkMode]);
 
-  /* PAGES WHERE SIDEBAR SHOULD NOT SHOW */
-  const hideSidebarRoutes = [
-    "/",
-    "/login",
-    "/register",
-  ];
-
-  const showSidebar =
-    !hideSidebarRoutes.includes(
-      location.pathname
-    );
-
   return (
+    <Routes>
 
-    <>
+      {/* PUBLIC ROUTES (NO SIDEBAR) */}
+      <Route path="/" element={<Landing />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
-      {/* SIDEBAR */}
-      {showSidebar && (
-
-        <Sidebar
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-        />
-
-      )}
-
-      {/* ROUTES */}
-      <Routes>
-
+      {/* PROTECTED LAYOUT ROUTES */}
+      <Route
+        element={
+          <AppLayout
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+          />
+        }
+      >
         <Route
-          path="/"
-          element={<Landing />}
-        />
-
-  <Route
-  path="/dashboard"
-  element={
-    <AppLayout
-      darkMode={darkMode}
-      setDarkMode={setDarkMode}
-    >
-
-      <Dashboard
-        darkMode={darkMode}
-      />
-
-    </AppLayout>
-  }
-/>
-
-<Route
-  path="/expenses"
-  element={
-    <AppLayout
-      darkMode={darkMode}
-      setDarkMode={setDarkMode}
-    >
-
-      <Expenses
-        darkMode={darkMode}
-        setDarkMode={setDarkMode}
-      />
-
-    </AppLayout>
-  }
-/>
-
-        <Route
-          path="/login"
-          element={<Login />}
+          path="/dashboard"
+          element={<Dashboard darkMode={darkMode} />}
         />
 
         <Route
-          path="/register"
-          element={<Register />}
+          path="/expenses"
+          element={<Expenses darkMode={darkMode} />}
         />
 
-      </Routes>
+        <Route
+          path="/settings"
+          element={<Settings darkMode={darkMode} setDarkMode={setDarkMode} />}
+        />
 
-    </>
+        <Route
+          path="/profile"
+          element={<Profile darkMode={darkMode} />}
+        />
+      </Route>
 
+    </Routes>
   );
-
 }
 
-function App() {
-
+export default function App() {
   return (
-
     <BrowserRouter>
-
       <AppContent />
-
     </BrowserRouter>
-
   );
-
 }
-
-export default App;

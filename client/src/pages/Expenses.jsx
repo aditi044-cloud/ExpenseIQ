@@ -8,10 +8,12 @@ function Expenses({ darkMode, setDarkMode }) {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
 const [type, setType] = useState("");
+const [date, setDate] = useState("");
 
   const [expenses, setExpenses] = useState([]);
   const [search, setSearch] = useState("");
-
+const [filterType,setFilterType] = useState("All");
+const [filterCategory,setFilterCategory] = useState("All");
 
 
 
@@ -45,12 +47,13 @@ const addExpense = async () => {
 
   try {
 
-    const expenseData = {
-      title,
-      amount,
-      category,
-      type,
-    };
+ const expenseData = {
+  title,
+  amount,
+  category,
+  type,
+  date,
+};
 
     if (editingId) {
 
@@ -76,6 +79,7 @@ const addExpense = async () => {
     setAmount("");
     setCategory("");
 setType("Expense");
+    setDate("");
 
   } catch (error) {
 
@@ -109,28 +113,36 @@ const editExpense = (expense) => {
   setEditingId(expense._id);
 
 };
-const filteredExpenses = expenses.filter((expense) =>
-  expense.title.toLowerCase().includes(search.toLowerCase())
-);
+const filteredExpenses = expenses.filter((expense)=>{
 
+ const searchMatch =
+ expense.title
+ .toLowerCase()
+ .includes(search.toLowerCase());
+
+
+ const typeMatch =
+ filterType==="All" ||
+ expense.type===filterType;
+
+
+ const categoryMatch =
+ filterCategory==="All" ||
+ expense.category===filterCategory;
+
+
+ return searchMatch && typeMatch && categoryMatch;
+
+});
   return (
 
   <div className={`app ${darkMode ? "dark" : ""}`}>
 
     {/* HEADER */}
 
-    <div className="header">
-
-      <h1>Expense Manager</h1>
-
-      <button
-        onClick={() => setDarkMode(!darkMode)}
-      >
-        {darkMode ? "☀️" : "🌙"}
-      </button>
-
-    </div>
-
+   <div className="header">
+  <h1>Expense Manager</h1>
+</div>
     {/* FORM */}
 
     <div className="controls">
@@ -152,6 +164,13 @@ const filteredExpenses = expenses.filter((expense) =>
           setAmount(e.target.value)
         }
       />
+      <input
+  type="date"
+  value={date}
+  onChange={(e)=>
+    setDate(e.target.value)
+  }
+/>
       <select
 className={category ? "nobita active" : "nobita"}
 value={category}
@@ -227,7 +246,64 @@ setType(e.target.value)
         setSearch(e.target.value)
       }
     />
+{/* FILTERS */}
 
+<div className="filters">
+
+<select
+value={filterType}
+onChange={(e)=>setFilterType(e.target.value)}
+>
+
+<option value="All">
+All Types
+</option>
+
+<option value="Expense">
+Expense
+</option>
+
+<option value="Income">
+Income
+</option>
+
+</select>
+
+
+
+<select
+value={filterCategory}
+onChange={(e)=>setFilterCategory(e.target.value)}
+>
+
+<option value="All">
+All Categories
+</option>
+
+<option value="Food">
+Food
+</option>
+
+<option value="Shopping">
+Shopping
+</option>
+
+<option value="Travel">
+Travel
+</option>
+
+<option value="Salary">
+Salary
+</option>
+
+<option value="Bills">
+Bills
+</option>
+
+</select>
+
+
+</div>
     {/* TRANSACTIONS */}
 
     <div className="transactions">
@@ -260,8 +336,16 @@ setType(e.target.value)
             <p>₹{expense.amount}</p>
 
 <span>
-  {expense.category} • {expense.type}
+ {expense.category} • {expense.type}
 </span>
+
+<p className="date">
+{
+ expense.date 
+ ? new Date(expense.date).toLocaleDateString()
+ : ""
+}
+</p>
 
           </div>
 

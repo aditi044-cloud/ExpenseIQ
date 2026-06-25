@@ -20,150 +20,269 @@ import {
   Wallet,
   Receipt,
   TrendingUp,
-  Flame
+  Flame,
+  Eye,
+  EyeOff
 } from "lucide-react";
 
 
 function Dashboard({ darkMode }) {
 
 
-  const [expenses,setExpenses] = useState([]);
+const [expenses,setExpenses] = useState([]);
 
+const [showMoney,setShowMoney] = useState(true);
 
 
-  useEffect(()=>{
 
-    fetchExpenses();
+useEffect(()=>{
 
-  },[]);
+fetchExpenses();
 
+},[]);
 
 
-  const fetchExpenses = async()=>{
 
-    try{
+const fetchExpenses = async()=>{
 
-      const response = await API.get("/expenses");
+try{
 
-      setExpenses(response.data);
+const response = await API.get("/expenses");
 
-    }
-    catch(error){
+setExpenses(response.data);
 
-      console.log(error);
 
-    }
+}
+catch(error){
 
-  };
+console.log(error);
 
+}
 
+};
 
-  const formatCurrency=(amount)=>{
 
-    return amount.toLocaleString("en-IN");
 
-  };
 
 
+const formatCurrency=(amount)=>{
 
-  // TOTAL EXPENSE
+return amount.toLocaleString("en-IN");
 
-  const totalExpense = expenses.reduce(
-    (sum,expense)=>
-      sum + Number(expense.amount),
-    0
-  );
+};
 
 
 
-  // HIGHEST EXPENSE
+const showAmount=(amount)=>{
 
-  const highestExpense = expenses.length
-  ?
-  Math.max(
-    ...expenses.map(
-      e=>Number(e.amount)
-    )
-  )
-  :
-  0;
+return showMoney
+?
+`₹${formatCurrency(amount)}`
+:
+"₹ •••••";
 
+};
 
 
-  // AVERAGE EXPENSE
 
-  const averageExpense = expenses.length
-  ?
-  Math.round(totalExpense / expenses.length)
-  :
-  0;
 
 
+// TOTAL EXPENSE ONLY
 
+const totalExpense = expenses.reduce(
 
-  // CATEGORY WISE DATA
+(sum,expense)=>
 
+expense.type==="Expense"
+?
+sum + Number(expense.amount)
+:
+sum,
 
-  const categoryData = expenses.reduce(
-    (acc,expense)=>{
+0
 
+);
 
-      const category = expense.category;
 
 
-      if(!acc[category]){
 
-        acc[category]=0;
 
-      }
+// TOTAL INCOME
 
+const totalIncome = expenses.reduce(
 
-      acc[category]+=Number(expense.amount);
+(sum,expense)=>
 
+expense.type==="Income"
+?
+sum + Number(expense.amount)
+:
+sum,
 
-      return acc;
+0
 
+);
 
-    },
-    {}
-  );
 
 
 
-  const pieData = Object.keys(categoryData)
-  .map(category=>({
 
-    name:category,
+// BALANCE
 
-    value:categoryData[category]
+const balance = totalIncome - totalExpense;
 
-  }));
 
 
 
 
-  // BAR DATA
+// HIGHEST EXPENSE
 
+const highestExpense = expenses.length
 
-  const barData = expenses.map(expense=>({
+?
 
-    title:expense.category,
+Math.max(
 
-    amount:Number(expense.amount)
+...expenses
 
-  }));
+.filter(e=>e.type==="Expense")
 
+.map(e=>Number(e.amount))
 
+)
 
-  const COLORS=[
+:
 
-    "#4f46e5",
-    "#06b6d4",
-    "#10b981",
-    "#f59e0b",
-    "#ef4444"
+0;
 
-  ];
+
+
+
+
+// AVERAGE EXPENSE
+
+const expenseTransactions = expenses.filter(
+
+e=>e.type==="Expense"
+
+);
+
+
+
+const averageExpense = expenseTransactions.length
+
+?
+
+Math.round(
+totalExpense / expenseTransactions.length
+)
+
+:
+
+0;
+
+
+
+
+
+
+// CATEGORY DATA
+
+
+const categoryData = expenses.reduce(
+
+(acc,expense)=>{
+
+
+if(expense.type==="Expense"){
+
+
+const category = expense.category;
+
+
+if(!acc[category]){
+
+acc[category]=0;
+
+}
+
+
+acc[category]+=Number(expense.amount);
+
+
+}
+
+
+return acc;
+
+
+},
+
+{}
+
+
+
+);
+
+
+
+
+
+const pieData = Object.keys(categoryData)
+
+.map(category=>(
+
+{
+
+name:category,
+
+value:categoryData[category]
+
+}
+
+));
+
+
+
+
+
+
+
+// BAR DATA
+
+
+const barData = expenses
+
+.filter(e=>e.type==="Expense")
+
+.map(expense=>(
+
+{
+
+title:expense.category,
+
+amount:Number(expense.amount)
+
+}
+
+));
+
+
+
+
+
+
+const COLORS=[
+
+"#4f46e5",
+"#06b6d4",
+"#10b981",
+"#f59e0b",
+"#ef4444"
+
+];
+
+
 
 
 
@@ -190,11 +309,9 @@ Dashboard
 
 
 
-{/* SUMMARY CARDS */}
-
-
 
 <div
+
 style={{
 
 display:"grid",
@@ -207,8 +324,14 @@ gap:"20px",
 marginBottom:"40px"
 
 }}
+
 >
 
+
+
+
+
+{/* TOTAL EXPENSE */}
 
 
 <div className="dashboard-card">
@@ -216,22 +339,45 @@ marginBottom:"40px"
 
 <div className="card-header">
 
+
 <Wallet size={22}/>
 
+
 <h3>
-Total Spent
+Total Expense
 </h3>
+
+
+<button
+className="eye-btn"
+onClick={()=>setShowMoney(!showMoney)}
+>
+{
+showMoney 
+?
+<Eye size={18}/>
+:
+<EyeOff size={18}/>
+}
+</button>
+
 
 </div>
 
 
+
 <h2>
-₹{formatCurrency(totalExpense)}
+
+{showAmount(totalExpense)}
+
 </h2>
 
 
+
 <p>
+
 All time expenses
+
 </p>
 
 
@@ -241,22 +387,32 @@ All time expenses
 
 
 
+
+{/* TRANSACTIONS */}
+
+
+
 <div className="dashboard-card">
 
 
 <div className="card-header">
 
+
 <Receipt size={22}/>
+
 
 <h3>
 Transactions
 </h3>
 
+
 </div>
 
 
 <h2>
+
 {expenses.length}
+
 </h2>
 
 
@@ -271,23 +427,33 @@ Total records
 
 
 
+
+
+
+{/* AVERAGE */}
+
+
 <div className="dashboard-card">
 
 
 <div className="card-header">
 
+
 <TrendingUp size={22}/>
+
 
 <h3>
 Average Expense
 </h3>
 
+
 </div>
+
 
 
 <h2>
 
-₹{formatCurrency(averageExpense)}
+{showAmount(averageExpense)}
 
 </h2>
 
@@ -303,29 +469,80 @@ Per transaction
 
 
 
+
+
+{/* INCOME */}
+
+
 <div className="dashboard-card">
 
 
 <div className="card-header">
 
+
 <Flame size={22}/>
 
+
 <h3>
-Highest Expense
+Total Income
 </h3>
+
 
 </div>
 
 
 <h2>
 
-₹{formatCurrency(highestExpense)}
+{showAmount(totalIncome)}
+
+</h2>
+
+
+
+<p>
+Money received
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+{/* BALANCE */}
+
+
+<div className="dashboard-card">
+
+
+<div className="card-header">
+
+
+<Wallet size={22}/>
+
+
+<h3>
+Balance
+</h3>
+
+
+</div>
+
+
+<h2>
+
+{showAmount(balance)}
 
 </h2>
 
 
 <p>
-Biggest spending
+Income - Expense
 </p>
 
 
@@ -333,7 +550,10 @@ Biggest spending
 
 
 
+
 </div>
+
+
 
 
 
@@ -349,7 +569,9 @@ Biggest spending
 
 
 <h2>
+
 Recent Transactions
+
 </h2>
 
 
@@ -360,8 +582,6 @@ expenses.length===0
 
 ?
 
-(
-
 <div className="empty-state">
 
 
@@ -371,18 +591,15 @@ No transactions yet
 
 
 <p>
-Start adding expenses to see activity here.
+Start adding expenses
 </p>
 
 
 </div>
 
-)
-
 
 :
 
-(
 
 expenses.slice(0,5).map(expense=>(
 
@@ -416,10 +633,9 @@ borderBottom:"1px solid #eee"
 
 <strong>
 
-₹{expense.amount}
+{showAmount(Number(expense.amount))}
 
 </strong>
-
 
 
 </div>
@@ -428,13 +644,14 @@ borderBottom:"1px solid #eee"
 ))
 
 
-)
-
 }
 
 
 
+
+
 </div>
+
 
 
 
@@ -468,7 +685,6 @@ gap:"20px"
 
 
 
-{/* PIE CHART */}
 
 
 
@@ -483,15 +699,11 @@ darkMode ? "#1f2937":"white",
 
 padding:"20px",
 
-borderRadius:"15px",
-
-boxShadow:
-"0 2px 10px rgba(0,0,0,0.08)"
+borderRadius:"15px"
 
 }}
 
 >
-
 
 
 <h2>
@@ -506,30 +718,19 @@ pieData.length===0
 
 ?
 
-(
 
 <div className="empty-chart">
 
-
 <h3>
-No expense data yet
+No expense data
 </h3>
-
-
-<p>
-Add expenses to see analysis
-</p>
 
 
 </div>
 
 
-)
-
-
 :
 
-(
 
 <ResponsiveContainer
 
@@ -567,9 +768,7 @@ pieData.map((entry,index)=>(
 
 key={index}
 
-fill={
-COLORS[index % COLORS.length]
-}
+fill={COLORS[index % COLORS.length]}
 
 />
 
@@ -595,9 +794,10 @@ COLORS[index % COLORS.length]
 
 </ResponsiveContainer>
 
-)
 
 }
+
+
 
 
 
@@ -608,8 +808,6 @@ COLORS[index % COLORS.length]
 
 
 
-
-{/* BAR CHART */}
 
 
 
@@ -624,19 +822,19 @@ darkMode ? "#1f2937":"white",
 
 padding:"20px",
 
-borderRadius:"15px",
-
-boxShadow:
-"0 2px 10px rgba(0,0,0,0.08)"
+borderRadius:"15px"
 
 }}
 
 >
 
 
+
 <h2>
 Category Analytics
 </h2>
+
+
 
 
 
@@ -647,29 +845,16 @@ barData.length===0
 ?
 
 
-(
-
 <div className="empty-chart">
 
-
 <h3>
-No analytics available
+No analytics
 </h3>
-
-
-<p>
-Your insights will appear here
-</p>
-
 
 </div>
 
-)
-
 
 :
-
-(
 
 
 <ResponsiveContainer
@@ -712,20 +897,20 @@ fill="#4f46e5"
 </ResponsiveContainer>
 
 
-)
-
-
 }
 
 
 
-</div>
-
-
-
 
 
 </div>
+
+
+
+
+
+</div>
+
 
 
 
@@ -739,6 +924,7 @@ fill="#4f46e5"
 
 
 }
+
 
 
 export default Dashboard;

@@ -1,11 +1,13 @@
 /* ================= ROOT THEME ================= */
 :root {
-  --text-light: #101723;
-  --text-dark: #f9fafb;
-  --muted-light: #64748b;
-  --muted-dark: #cbd5e1;
-}
 
+  --text-light:#334155;
+  --text-dark:#e5e7eb;
+
+  --muted-light:#64748b;
+  --muted-dark:#cbd5e1;
+
+}
 * {
   margin: 0;
   padding: 0;
@@ -248,7 +250,7 @@ body {
 /* ================= EXPENSE CARD ================= */
 
 .expense-card {
-  background: rgba(255, 255, 255, 0.7);
+   background:white;
   backdrop-filter: blur(10px);
   border-radius: 18px;
   padding: 22px;
@@ -267,15 +269,59 @@ body {
 
 /* DARK CARD */
 .dark .expense-card {
-  background: rgba(17, 24, 39, 0.7);
+  background:#1f2937;
+
+color:#e5e7eb;
+
   backdrop-filter: blur(10px);
 }
 
 /* TEXT INSIDE CARD */
-.expense-card h3,
-.expense-card p,
-.expense-card span {
-  color: inherit;
+.expense-card h3{
+
+color:#475569;
+
+}
+
+
+.dark .expense-card h3{
+
+color:#f1f5f9;
+
+}
+
+
+.expense-card p{
+
+font-size:18px;
+
+font-weight:600;
+
+color:#334155;
+
+}
+
+
+.dark .expense-card p{
+
+color:#e5e7eb;
+
+}
+
+
+.expense-card span{
+
+font-size:14px;
+
+color:#64748b;
+
+}
+
+
+.dark .expense-card span{
+
+color:#94a3b8;
+
 }
 
 .expense-card p {
@@ -329,7 +375,7 @@ body {
 /* ================= EMPTY STATE ================= */
 
 .empty {
-  background: rgba(255, 255, 255, 0.7);
+  background:white;
   padding: 60px 20px;
   border-radius: 20px;
   text-align: center;
@@ -338,7 +384,9 @@ body {
 }
 
 .dark .empty {
-  background: rgba(31, 41, 55, 0.7);
+ background:#1f2937;
+
+color:#cbd5e1;
   color: #cbd5e1;
 }
 
@@ -416,22 +464,7 @@ body {
 
 /* Title + Amount empty */
 
-.controls input::placeholder {
-  color:#9ca3af;
-}
 
-
-/* Title + Amount after typing */
-
-.controls input {
-  color:#9ca3af;
-}
-
-
-.controls input:focus,
-.controls input:not(:placeholder-shown){
-  color:#111827;
-}
 
 
 
@@ -467,8 +500,18 @@ body {
 
 
 /* empty input placeholder */
-.controls input::placeholder {
-  color: #9ca3af;
+.controls input{
+
+color:#9ca3af;
+
+}
+
+
+.controls input:focus,
+.controls input:not(:placeholder-shown){
+
+color:#111827;
+
 }
 
 
@@ -491,4 +534,135 @@ body {
 
 .dark .controls input::placeholder {
   color: #94a3b8;
+}/* FILTERS */
+
+.filters{
+
+display:flex;
+gap:15px;
+margin-bottom:25px;
+
+}
+
+
+.filters select{
+
+padding:12px 15px;
+border-radius:12px;
+border:1px solid #d1d5db;
+background:white;
+color:#111827;
+
+}
+
+
+
+.date{
+
+font-size:13px;
+color:#6b7280;
+margin-top:5px;
+
+}
+
+
+/* DARK */
+
+.dark .filters select{
+
+background:#1f2937;
+color:white;
+border:1px solid #374151;
+
+}
+
+
+.dark .date{
+
+color:#9ca3af;
+
+}
+
+
+
+@media(max-width:600px){
+
+.filters{
+
+flex-direction:column;
+
+}
+
+}/* ================= FILTER DROPDOWN COLORS ================= */
+
+
+/* LIGHT MODE */
+.filters select {
+
+  background: #ffffff;
+
+  color: #9ca3af;
+
+  border: 1px solid #d1d5db;
+
+}
+
+
+/* selected value */
+
+.filters select:valid {
+
+  color: #9ca3af;
+
+}
+
+
+/* DARK MODE */
+
+.dark .filters select {
+
+  background: #1f2937;
+
+  color: #cbd5e1;
+
+  border: 1px solid #374151;
+
+}
+
+
+/* keep same grey for dark */
+
+.dark .filters select:valid {
+
+  color: #cbd5e1;
+
+}
+
+
+/* dropdown options */
+
+.filters select option {
+
+  color:#111827;
+
+}
+
+
+.dark .filters select option {
+
+  color:#f9fafb;
+
+}/* ================= DATE ================= */
+
+.controls input[type="date"]{
+
+color:#9ca3af;
+
+}
+
+
+.dark .controls input[type="date"]{
+
+color:#f9fafb;
+
 }

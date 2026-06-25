@@ -1,4 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 import {
   FaWallet,
@@ -10,9 +11,14 @@ import {
 
 import "../styles/Sidebar.css";
 
+
 function Sidebar({ darkMode }) {
 
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const [openProfile, setOpenProfile] = useState(false);
+
 
   return (
 
@@ -25,34 +31,43 @@ function Sidebar({ darkMode }) {
 
       </div>
 
+
+
       {/* NAVIGATION */}
       <div className="sidebar-links">
 
-         <Link
+
+        <Link
           to="/expenses"
           className={
             location.pathname === "/expenses"
-              ? "active"
-              : ""
+            ? "active"
+            : ""
           }
         >
+
           <FaWallet />
           <span>Expenses</span>
+
         </Link>
+
+
 
         <Link
           to="/dashboard"
           className={
             location.pathname === "/dashboard"
-              ? "active"
-              : ""
+            ? "active"
+            : ""
           }
         >
+
           <FaChartPie />
           <span>Dashboard</span>
+
         </Link>
 
-       
+
 
         <Link to="/settings">
 
@@ -61,35 +76,73 @@ function Sidebar({ darkMode }) {
 
         </Link>
 
+
       </div>
 
+
+
+
       {/* USER SECTION */}
+
       <div className="sidebar-bottom">
 
-        <div className="profile">
+
+        <div
+          className="profile"
+          onClick={() => setOpenProfile(!openProfile)}
+        >
 
           <FaUserCircle />
 
+
           <div>
+
             <h4>User</h4>
             <p>Free Plan</p>
+
           </div>
+
 
         </div>
 
-        <button className="logout-btn">
 
-          <FaSignOutAlt />
-          Logout
 
-        </button>
+        {
+ openProfile && (
+
+  <div className="profile-menu">
+
+
+    <button
+      onClick={() => navigate("/profile")}
+    >
+      Profile
+    </button>
+
+
+    <button className="logout-dropdown">
+
+      <FaSignOutAlt/>
+      Logout
+
+    </button>
+
+
+  </div>
+
+ )
+}
+
+
 
       </div>
+
 
     </div>
 
   );
 
 }
+
 
 export default Sidebar;
