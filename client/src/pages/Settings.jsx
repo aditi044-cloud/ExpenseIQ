@@ -9,15 +9,16 @@ import {
  FaMoon
 } from "react-icons/fa";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import API from "../services/api";
 
 function Settings({darkMode,setDarkMode}) {
 
 const [editMode,setEditMode] = useState(false);
 
-const [name,setName] = useState("User");
-
-const [email,setEmail] = useState("user@gmail.com");
+const [name, setName] = useState("");
+const [email, setEmail] = useState("");
+const [currency, setCurrency] = useState("INR");
 
 const handleSave = () => {
 
@@ -26,51 +27,79 @@ const handleSave = () => {
 };
 const handleExport = async () => {
 
-  const response = await fetch(
-    "http://localhost:5000/expenses"
-  );
+  try {
 
-  const data = await response.json();
+    const response = await API.get("/expenses");
 
-  const csvRows = [
+    const data = response.data;
 
-    ["Title","Amount","Category","Type","Date"],
+    const csvRows = [
 
-    ...data.map(expense => [
+      ["Title","Amount","Category","Type","Date"],
 
-      expense.title,
-      expense.amount,
-      expense.category,
-      expense.type,
-      new Date(expense.date)
-      .toLocaleDateString()
+      ...data.map(expense => [
 
-    ])
+        expense.title,
+        expense.amount,
+        expense.category,
+        expense.type,
+        new Date(expense.date).toLocaleDateString()
 
-  ];
+      ])
 
-  const csvContent = csvRows
-    .map(row => row.join(","))
-    .join("\n");
+    ];
 
-  const blob = new Blob(
-    [csvContent],
-    { type: "text/csv" }
-  );
+    const csvContent = csvRows
+      .map(row => row.join(","))
+      .join("\n");
 
-  const url =
-    window.URL.createObjectURL(blob);
+    const blob = new Blob(
+      [csvContent],
+      { type: "text/csv" }
+    );
 
-  const link =
-    document.createElement("a");
+    const url = window.URL.createObjectURL(blob);
 
-  link.href = url;
+    const link = document.createElement("a");
 
-  link.download = "expenses.csv";
+    link.href = url;
+    link.download = "expenses.csv";
+    link.click();
 
-  link.click();
+  }
+
+  catch(error){
+
+    console.log(error);
+
+    alert("Unable to export expenses.");
+
+  }
 
 };
+useEffect(() => {
+
+  const fetchUser = async () => {
+
+    try {
+
+      const res = await API.get("/auth/me");
+
+      setName(res.data.name);
+      setEmail(res.data.email);
+      setCurrency(res.data.currency);
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
+
+  fetchUser();
+
+}, []);
 
 return (
 
@@ -204,9 +233,19 @@ return (
           Currency
         </h4>
 
-        <p>
-          ₹ Indian Rupee
-        </p>
+        {editMode ? (
+  <select
+    value={currency}
+    onChange={(e) => setCurrency(e.target.value)}
+  >
+    <option value="INR">INR (₹)</option>
+    <option value="USD">USD ($)</option>
+    <option value="EUR">EUR (€)</option>
+    <option value="GBP">GBP (£)</option>
+  </select>
+) : (
+  <p>{currency}</p>
+)}
 
       </div>
 

@@ -18,6 +18,16 @@ function Sidebar({ darkMode }) {
   const navigate = useNavigate();
 
   const [openProfile, setOpenProfile] = useState(false);
+  const handleLogout = () => {
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    setOpenProfile(false);
+
+    navigate("/login");
+
+  };
 
 
   return (
@@ -120,7 +130,10 @@ function Sidebar({ darkMode }) {
     </button>
 
 
-    <button className="logout-dropdown">
+    <button
+    className="logout-dropdown"
+    onClick={handleLogout}
+>
 
       <FaSignOutAlt/>
       Logout

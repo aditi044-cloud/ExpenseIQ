@@ -20,6 +20,13 @@ function Profile({darkMode}){
     transactions:0
 
 });
+const [user, setUser] = useState({
+  name: "",
+  email: "",
+  currency: "INR",
+  monthlyIncome: 0,
+  savingGoal: 0
+});
 
 
 useEffect(()=>{
@@ -31,6 +38,9 @@ useEffect(()=>{
             const res = await API.get("/profile");
 
             setProfile(res.data);
+            const userRes = await API.get("/auth/me");
+
+setUser(userRes.data);
 
         }
         catch(error){
@@ -70,11 +80,11 @@ Profile
 
 <div className="profile-info">
 
-<h2>User</h2>
+<h2>{user.name}</h2>
 
 <p>
 <FaEnvelope/>
-user@gmail.com
+{user.email}
 </p>
 
 
@@ -108,14 +118,17 @@ Personal Details
 
 
 <div className="row">
-<span>Name</span>
-<p>User</p>
+  <span>Name</span>
+  <p>{user.name}</p>
 </div>
 
-
 <div className="row">
-<span>Email</span>
-<p>user@gmail.com</p>
+  <span>Email</span>
+  <p>{user.email}</p>
+</div>
+<div className="row">
+  <span>Currency</span>
+  <p>{user.currency}</p>
 </div>
 
 

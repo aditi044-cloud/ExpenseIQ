@@ -3,7 +3,7 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-
+import ProtectedRoute from "./components/ProtectedRoutes";
 import { useEffect, useState } from "react";
 
 import AppLayout from "./layouts/AppLayout";
@@ -34,13 +34,15 @@ function AppContent() {
 
       {/* PROTECTED LAYOUT ROUTES */}
       <Route
-        element={
-          <AppLayout
-            darkMode={darkMode}
-            setDarkMode={setDarkMode}
-          />
-        }
-      >
+  element={
+    <ProtectedRoute>
+      <AppLayout
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+      />
+    </ProtectedRoute>
+  }
+>
         <Route
           path="/dashboard"
           element={<Dashboard darkMode={darkMode} />}

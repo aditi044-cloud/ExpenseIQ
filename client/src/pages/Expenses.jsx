@@ -8,7 +8,9 @@ function Expenses({ darkMode, setDarkMode }) {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
 const [type, setType] = useState("");
-const [date, setDate] = useState("");
+const [date, setDate] = useState(
+  new Date().toISOString().split("T")[0]
+);
 
   const [expenses, setExpenses] = useState([]);
   const [search, setSearch] = useState("");
@@ -28,10 +30,10 @@ const [editingId, setEditingId] = useState(null);
       setExpenses(response.data);
 
     } catch (error) {
-
-      console.log(error);
-
-    }
+    console.log("Status:", error.response?.status);
+    console.log("Data:", error.response?.data);
+    console.log(error);
+}
 
   };
 
@@ -45,47 +47,59 @@ const [editingId, setEditingId] = useState(null);
   // ADD EXPENSE
 const addExpense = async () => {
 
-  try {
+if(!title || !amount || !category || !type){
+ alert("Please fill all fields");
+ return;
+}
 
- const expenseData = {
+
+try {
+
+ const expenseData={
   title,
-  amount,
+  amount:Number(amount),
   category,
   type,
-  date,
-};
+  date
+ };
 
-    if (editingId) {
 
-      await API.put(
-        `/expenses/${editingId}`,
-        expenseData
-      );
+ if(editingId){
 
-      setEditingId(null);
+ await API.put(
+ `/expenses/${editingId}`,
+ expenseData
+ );
 
-    } else {
+ setEditingId(null);
 
-      await API.post(
-        "/expenses",
-        expenseData
-      );
 
-    }
+ }
+ else{
 
-    fetchExpenses();
+ await API.post(
+ "/expenses",
+ expenseData
+ );
 
-    setTitle("");
-    setAmount("");
-    setCategory("");
-setType("Expense");
-    setDate("");
+ }
 
-  } catch (error) {
 
-    console.log(error);
+ fetchExpenses();
 
-  }
+
+ setTitle("");
+ setAmount("");
+ setCategory("");
+ setType("Expense");
+ setDate(new Date().toISOString().split("T")[0]);
+
+}
+catch(error){
+
+console.log(error.response?.data || error);
+
+}
 
 };
   const deleteExpense = async (id) => {
@@ -108,8 +122,17 @@ const editExpense = (expense) => {
   setTitle(expense.title);
 
   setAmount(expense.amount);
+
   setCategory(expense.category);
+
   setType(expense.type);
+
+  setDate(
+    expense.date
+      ? new Date(expense.date).toISOString().split("T")[0]
+      : new Date().toISOString().split("T")[0]
+  );
+
   setEditingId(expense._id);
 
 };

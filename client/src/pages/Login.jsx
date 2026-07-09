@@ -1,3 +1,4 @@
+import API from "../services/api";
 import { useState } from "react";
 import "../styles/Auth.css";
 import { useNavigate } from "react-router-dom";
@@ -9,38 +10,42 @@ export default function Login() {
   // 🟢 STATE
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [error,setError] = useState("");
   // 🟢 LOGIN FUNCTION
-  const handleLogin = (e) => {
-    e.preventDefault();
+const handleLogin = async (e) => {
+  e.preventDefault();
 
-    // 1. Get stored user
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+  try {
 
-    // 2. Check if user exists
-    if (!storedUser) {
-      alert("No user found. Please register first.");
-      return;
-    }
+    const res = await API.post("/auth/login", {
+      email,
+      password,
+    });
 
-    // 3. PASSWORD MATCHING (IMPORTANT)
-    if (
-      email === storedUser.email &&
-      password === storedUser.password
-    ) {
-      // ✅ LOGIN SUCCESS
+    console.log(
+      "LOGIN RESPONSE FULL:",
+      JSON.stringify(res.data, null, 2)
+    );
 
-      localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem(
+      "token",
+      res.data.token
+    );
 
-      alert("Login Successful!");
+    alert("Login Successful!");
 
-      navigate("/expenses");
+    navigate("/expenses");
 
-    } else {
-      // ❌ WRONG CREDENTIALS
-      alert("Invalid email or password");
-    }
-  };
+
+  } catch(error) {
+
+    setError(
+      error.response?.data?.message ||
+      "Invalid email or password"
+    );
+
+  }
+};
 
   return (
     <div className="auth-container">
@@ -60,6 +65,14 @@ export default function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+
+        {
+  error && (
+    <p className="error">
+      {error}
+    </p>
+  )
+}
 
         <button type="submit">Login</button>
 

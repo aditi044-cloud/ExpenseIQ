@@ -1,4 +1,5 @@
 require("dotenv").config();
+const auth = require("./middleware/auth");
 const Expense = require("./models/Expense");
 const Budget = require("./models/Budget");
 const express = require("express");
@@ -40,6 +41,17 @@ mongoose.connect(process.env.MONGO_URI)
 
 
 
+const authRoutes =
+require("./routes/authRoutes");
+
+
+app.use(
+"/auth",
+authRoutes
+);
+
+
+
 
 // MIDDLEWARE
 app.use((req, res, next) => {
@@ -64,11 +76,14 @@ app.get("/", (req, res) => {
 
 
 // GET ALL EXPENSES
-app.get("/expenses", async (req, res) => {
 
+app.get("/expenses", auth, async (req, res) => {
   try {
 
-    const expenses = await Expense.find();
+    const expenses =
+await Expense.find({
+userId:req.user.id
+});
 
     res.send(expenses);
 
@@ -86,13 +101,30 @@ app.get("/expenses", async (req, res) => {
 
 
 // ADD NEW EXPENSE
-app.post("/expenses", async (req, res) => {
+app.post("/expenses", auth, async (req, res) => {
 
   try {
 
-    const newExpense = new Expense(req.body);
 
-    const savedExpense = await newExpense.save();
+    const newExpense = new Expense({
+
+      title:req.body.title,
+
+      amount:req.body.amount,
+
+      category:req.body.category,
+
+      type:req.body.type,
+
+      date:req.body.date,
+
+      userId:req.user.id
+
+    });
+
+
+    const savedExpense =
+    await newExpense.save();
 
     res.status(201).send({
       message: "Expense saved to database",
@@ -113,17 +145,27 @@ app.post("/expenses", async (req, res) => {
 
 
 // UPDATE EXPENSE
-app.put("/expenses/:id", async (req, res) => {
+app.put("/expenses/:id", auth, async (req, res) => {
 
   try {
 
-    const expenseId = req.params.id;
+    
 
-    const updatedExpense = await Expense.findByIdAndUpdate(
-      expenseId,
-      req.body,
-      { new: true }
-    );
+  const updatedExpense =
+await Expense.findOneAndUpdate(
+
+{
+_id:req.params.id,
+userId:req.user.id
+},
+
+req.body,
+
+{
+new:true
+}
+
+);
 
     if (!updatedExpense) {
 
@@ -152,14 +194,18 @@ app.put("/expenses/:id", async (req, res) => {
 
 
 // DELETE EXPENSE
-app.delete("/expenses/:id", async (req, res) => {
+app.delete("/expenses/:id", auth, async (req,res)=>{
 
   try {
 
-    const deletedExpense = await Expense.findByIdAndDelete(
-      req.params.id
-    );
+  const deletedExpense =
+await Expense.findOneAndDelete({
 
+_id:req.params.id,
+
+userId:req.user.id
+
+});
     if (!deletedExpense) {
 
       return res.status(404).send({
@@ -185,7 +231,7 @@ app.delete("/expenses/:id", async (req, res) => {
 });
 
 // PROFILE DATA
-app.get("/profile", async (req, res) => {
+app.get("/profile", auth, async (req, res) => {
 
   try {
 
@@ -193,9 +239,10 @@ app.get("/profile", async (req, res) => {
     const income = await Expense.aggregate([
 
       {
-        $match: {
-          type: "Income"
-        }
+        $match:{
+type:"Income",
+userId:req.user.id
+}
       },
 
       {
@@ -218,9 +265,10 @@ app.get("/profile", async (req, res) => {
     const expense = await Expense.aggregate([
 
       {
-        $match: {
-          type: "Expense"
-        }
+        $match:{
+type:"Expense",
+userId:req.user.id
+}
       },
 
 
@@ -241,7 +289,7 @@ app.get("/profile", async (req, res) => {
 
 
 
-    const transactions = await Expense.countDocuments();
+    const transactions = await Expense.countDocuments({userId:req.user.id});
 
 
 
@@ -282,11 +330,13 @@ app.get("/profile", async (req, res) => {
 });
 
 // GET BUDGET
-app.get("/budget", async(req,res)=>{
+app.get("/budget", auth, async(req,res)=>{
 
   try{
 
-    const budget = await Budget.findOne();
+    const budget = await Budget.findOne({
+    userId: req.user.id
+});
 
     res.send(budget);
 
@@ -303,14 +353,14 @@ app.get("/budget", async(req,res)=>{
 
 
 // SAVE BUDGET
-app.post("/budget", async(req,res)=>{
+app.post("/budget", auth, async(req,res)=>{
 
   try{
 
     const budget =
     await Budget.findOneAndUpdate(
 
-      {},
+      { userId:req.user.id},
 
       req.body,
 
